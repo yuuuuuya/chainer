@@ -1,22 +1,51 @@
-import chainer
-from chainer import Link, Chain, ChainList
-import chainer.functions as F#パラメータを持たない関数
-import chainer.links as L#パラメータを持つ関数
 import numpy as np
-#chainはパラメータ層をもつ（link）をまとめて置くためのクラス。chain.params()メソッドで更新されるパラメータ一覧を取得
+import chainer
+from chainer import cuda, Function, gradient_check, report, training, utils, Variable
+from chainer import datasets, iterators, optimizers, serializers
+from chainer import Link, Chain, ChainList
+import chainer.functions as F
+import chainer.links as L
+from chainer.training import extensions
+
+import pdb
+import argparse
+import os.path
+import sys
 
 
-#参考URL：https://qiita.com/icoxfog417/items/96ecaff323434c8d677b
-#http://ai-kenkyujo.com/2017/09/18/chainer-deeplearning/
-#https://qiita.com/mitmul/items/1e35fba085eb07a92560
 
-class MyChain(Chain):
+def main(args):
 
-    def __init__(self):
-        super(MyChain, self).__init__(
-            l1=L.Linear(784, 10)
-        )
 
-    def __call__(self, x):
-        h = F.sigmoid(self.l1(x))
-        return h
+    batchSize = args.batch_size
+
+    #read datasets in the form of vector.
+    train, test = chainer.datasets.get_mnist()
+
+    #extract batSize of data at random
+    #repeat=False mean that stop iteration when all example are visited
+    train_iter = iterators.SerialIterator(train, batchSize, repeat=False, shuffle=True)
+    test_iter = iterators.SerialIterator(test, batchSize, repeat=False, shuffle=False)
+
+    pdb.set_trace()
+
+
+
+
+
+
+
+if __name__ == '__main__':
+
+    parser = argparse.ArgumentParser(description = 'chainer implementation')
+
+    parser.add_argument('--batch_size', '-b', type =int, default =100 )
+    parser.add_argument('--figname', '-fig', type =str, default = 'cross' )
+    parser.add_argument('--iteration', '-i', type =int, default =200 )
+    parser.add_argument('--stepsize', '-s', type =float, default = 0.0000007 )
+
+    args = parser.parse_args()
+
+    main(args)
+    os.system('say "chainerの実装終了"')
+    #os.system('open -a Finder %s'%datapath)
